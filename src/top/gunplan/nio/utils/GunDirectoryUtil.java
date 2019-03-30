@@ -31,7 +31,7 @@ public final class GunDirectoryUtil {
                 nextFindFile(files, processPath.toString(), pattern, processPath.toString().replace(folder, ""));
             } else {
                 if (processPath.toString().endsWith(pattern)) {
-                    files.add(new GunHttpMappingFileReference(base.replace("/",".")+".", folder, processPath.toFile()));
+                    files.add(new GunHttpMappingFileReference(base.replace("/", ".") + ".", folder, processPath.toFile()));
                 }
             }
         }

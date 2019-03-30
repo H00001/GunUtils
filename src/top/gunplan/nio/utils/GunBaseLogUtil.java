@@ -42,11 +42,16 @@ public abstract class GunBaseLogUtil {
         }
     }
 
-    public static void debug(String s) {
+    public static void debug(String s, String... val) {
+
         if (GunBaseLogUtil.level <= (BASELEVEL << 1)) {
             try {
-                GunBaseLogUtil.stdoutput.write(("[LOG][DEBUG] " + s + "\n").getBytes());
-                stdoutput.flush();
+                if (val == null || val.length == 0) {
+                    GunBaseLogUtil.stdoutput.write(("[LOG][DEBUG] " + s + "\n").getBytes());
+                } else {
+                    GunBaseLogUtil.stdoutput.write(("[LOG][DEBUG]" + val[0] + " " + s + "\n").getBytes());
+                }
+              //  stdoutput.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
