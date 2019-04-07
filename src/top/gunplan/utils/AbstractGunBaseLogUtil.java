@@ -1,6 +1,5 @@
-package top.gunplan.nio.utils;
+package top.gunplan.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;

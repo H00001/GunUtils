@@ -1,4 +1,6 @@
-package top.gunplan.nio.utils;
+package top.gunplan.utils;
+
+import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,6 +17,15 @@ public final class GunBytesUtil {
         return newbbytes;
     }
 
+
+    public static boolean compareBytesFromStart(final byte[] src, @NotNull final byte... b) {
+        for (int i = 0; i < b.length; i++) {
+            if (src[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private static ByteBuffer heapbuff;
 

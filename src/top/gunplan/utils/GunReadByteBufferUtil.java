@@ -1,4 +1,4 @@
-package top.gunplan.nio.utils;
+package top.gunplan.utils;
 
 import java.nio.ByteBuffer;
 

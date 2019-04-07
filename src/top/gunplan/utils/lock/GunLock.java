@@ -1,4 +1,4 @@
-package top.gunplan.nio.utils.lock;
+package top.gunplan.utils.lock;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -59,7 +58,7 @@ public final class GunLock implements Lock {
     public static void main(String[] args) throws InterruptedException {
 
 
-         GunUnFareAquire.GunInlineLinkedBlockQueue<Integer> queue = new GunUnFareAquire.GunInlineLinkedBlockQueue<>();
+        GunUnFareAquire.GunInlineLinkedBlockQueue0<Integer> queue = new GunUnFareAquire.GunInlineLinkedBlockQueue0<>();
         ArrayList<Integer> arrayList = new ArrayList<>();
         ExecutorService es = Executors.newFixedThreadPool(4);
         for (int j = 0; j < 10; j++) {

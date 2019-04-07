@@ -1,4 +1,4 @@
-package top.gunplan.nio.utils;
+package top.gunplan.utils;
 
 /**
  * about this class, we do not suggest you explore

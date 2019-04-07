@@ -1,4 +1,4 @@
-package top.gunplan.nio.utils.lock;
+package top.gunplan.utils.lock;
 
 import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 
