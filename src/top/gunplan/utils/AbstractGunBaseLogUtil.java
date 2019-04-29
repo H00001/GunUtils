@@ -53,32 +53,32 @@ public abstract class AbstractGunBaseLogUtil {
 
     public static void info(String s, String... val) {
         if (AbstractGunBaseLogUtil.level <= (BASELEVEL)) {
-            realPrint(stdoutput, "[INFO]", s, val);
+            realPrint(stdoutput, "[INFO] ", s, val);
         }
     }
 
     public static void debug(String s, String... val) {
 
         if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 1)) {
-            realPrint(stdoutput, "\\033[32m[DEBUG]\\033[39;49;0m", s, val);
+            realPrint(stdoutput, "[DEBUG] ", s, val);
         }
     }
 
     public static void error(String s, String... val) {
         if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 2)) {
-            realPrint(erroutput, "[ERROR]", s, val);
+            realPrint(erroutput, "[ERROR] ", s, val);
         }
     }
 
     public static void error(Exception s) {
         if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 2)) {
-            realPrint(erroutput, "[ERROR]", s.getLocalizedMessage());
+            realPrint(erroutput, "[ERROR] ", s.getLocalizedMessage());
         }
     }
 
     public static void urgency(String s, String... val) {
         if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 3)) {
-            realPrint(erroutput, "[URGENCY]", s, val);
+            realPrint(erroutput, "[URGENCY] ", s, val);
         }
     }
 
