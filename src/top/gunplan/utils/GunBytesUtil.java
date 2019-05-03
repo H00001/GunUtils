@@ -1,6 +1,6 @@
 package top.gunplan.utils;
 
-import com.sun.istack.internal.NotNull;
+
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -55,9 +55,15 @@ public final class GunBytesUtil {
             writeByte((byte) save);
         }
 
-        public void write64(int save) {
+        public void write32(int save) {
             write(save >> 16);
             write(save);
+        }
+
+        public void writeLong(long save) {
+            write32((int) (save >> 32));
+            write32((int) save);
+
         }
     }
 
@@ -99,10 +105,16 @@ public final class GunBytesUtil {
             return readByte() != 0;
         }
 
-        public int readInt64() {
+        public int readInt32() {
             int left = readInt();
             int right = readInt();
             return (left << 16) ^ right;
+        }
+
+        public long readLong() {
+            long left = readInt32();
+            long right = readInt32();
+            return (left << 32) | (right);
         }
 
         public byte[] readByte(int len) {
@@ -120,7 +132,7 @@ public final class GunBytesUtil {
     }
 
 
-    public static boolean compareBytesFromStart(final byte[] src, @NotNull final byte... b) {
+    public static boolean compareBytesFromStart(final byte[] src,  final byte... b) {
         for (int i = 0; i < b.length; i++) {
             if (src[i] != b[i]) {
                 return false;
@@ -129,7 +141,7 @@ public final class GunBytesUtil {
         return true;
     }
 
-    public static boolean compareBytesFromEnd(final byte[] src, @NotNull final byte... b) {
+    public static boolean compareBytesFromEnd(final byte[] src,  final byte... b) {
         for (int i = b.length - 1; i > 0; i--) {
             if (src[src.length - i] != b[b.length - i]) {
                 return false;

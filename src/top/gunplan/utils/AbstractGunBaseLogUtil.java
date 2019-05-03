@@ -23,7 +23,7 @@ public abstract class AbstractGunBaseLogUtil {
     }
 
     private static final int BASELEVEL;
-    private static volatile int level = BASELEVEL << 1;
+    private static volatile int level = 0;
     private static volatile OutputStream stdoutput;
     private static volatile OutputStream erroutput;
 

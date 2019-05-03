@@ -1,6 +1,5 @@
 package top.gunplan.utils;
 
-import com.sun.istack.internal.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,13 +16,13 @@ import java.util.List;
  * @author dosdrtt
  */
 public final class GunDirectoryUtil {
-    public static List<GunHttpMappingFileReference> scanAllFilesFromDirectory(final String folder) throws IOException {
+    public static List<GunHttpMappingFileReference> scanAllFilesFromDirectory(final String folder, String type) throws IOException {
         List<GunHttpMappingFileReference> files = new LinkedList<>();
-        nextFindFile(files, folder, ".class", "");
+        nextFindFile(files, folder, type, "");
         return files;
     }
 
-    private static void nextFindFile(@NotNull List<GunHttpMappingFileReference> files, String folder, String pattern, String base) throws IOException {
+    private static void nextFindFile(List<GunHttpMappingFileReference> files, String folder, String pattern, String base) throws IOException {
         Path path = Paths.get(folder);
         DirectoryStream<Path> dirStream = Files.newDirectoryStream(path);
         for (Path processPath : dirStream) {
