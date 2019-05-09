@@ -14,29 +14,40 @@ public abstract class AbstractGunBaseLogUtil {
 
     /**
      * this is s static block
-     *
-     * */
+     */
+
+
+    private static final int BASELEVEL;
+    private static volatile int level = 0;
+
+
     static {
         stdoutput = System.out;
         erroutput = System.err;
         BASELEVEL = 1;
     }
 
-    private static final int BASELEVEL;
-    private static volatile int level = 0;
+    public static synchronized void setErroutput(OutputStream erroutput) {
+        AbstractGunBaseLogUtil.erroutput = erroutput;
+    }
+
+    public static void init() {
+
+    }
+
     private static volatile OutputStream stdoutput;
     private static volatile OutputStream erroutput;
 
-    private static void realPrint(final OutputStream os, final String TAG, String content, String... val) {
-        String op = TAG;
+    private static void realPrint(final OutputStream os, final String tag, String content, String... val) {
+        String op = tag;
         if (val != null && val.length != 0) {
             StringBuilder contentBuilder = new StringBuilder();
             for (String aVal : val) {
                 contentBuilder.append(aVal);
             }
-            op = op + " " + contentBuilder.toString() + " " + content;
+            op = op + contentBuilder.toString() + " " + content;
         } else {
-            op = op + " " + content;
+            op = op + content;
         }
         try {
             os.write((op + "\n").getBytes());
@@ -46,7 +57,7 @@ public abstract class AbstractGunBaseLogUtil {
         }
     }
 
-    public static void setStdoutput(OutputStream os) {
+    public static synchronized void setStdoutput(OutputStream os) {
         AbstractGunBaseLogUtil.stdoutput = os;
     }
 
@@ -82,12 +93,12 @@ public abstract class AbstractGunBaseLogUtil {
         }
     }
 
-    public static void outputFile(String file) {
-        try {
-            byte[] property = Files.readAllBytes(Paths.get(Objects.requireNonNull(AbstractGunBaseLogUtil.class.getClassLoader().getResource(file)).toURI()));
-            realPrint(stdoutput, "", new String(property));
-        } catch (Exception e) {
-        }
+    public static void outputFile(String file) throws Exception {
+
+        byte[] property = Files.readAllBytes(Paths.get(Objects.requireNonNull(AbstractGunBaseLogUtil.class
+                .getClassLoader().getResource(file)).toURI()));
+        realPrint(stdoutput, "", new String(property));
+
     }
 
     public static void setLevel(int level) {
