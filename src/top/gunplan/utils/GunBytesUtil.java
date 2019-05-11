@@ -1,7 +1,6 @@
 package top.gunplan.utils;
 
 
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -10,18 +9,59 @@ import java.nio.channels.SocketChannel;
  * @author dosdrtt
  */
 public final class GunBytesUtil {
-    public static class GunWriteByteUtil {
+    public static boolean compareBytesFromStart(final byte[] src, final byte... b) {
+        for (int i = 0; i < b.length; i++) {
+            if (src[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean compareBytesFromEnd(final byte[] src, final byte... b) {
+        for (int i = b.length - 1; i > 0; i--) {
+            if (src[src.length - i] != b[b.length - i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static byte[] incrementCopy(byte[] oldbytes, int increment) {
+        byte[] newbbytes = new byte[oldbytes.length + increment];
+        System.arraycopy(oldbytes, 0, newbbytes, 0, oldbytes.length);
+        return newbbytes;
+    }
+
+
+    public interface GunExecByteUtil {
+        default int getLenSum() {
+            return -1;
+        }
+
+        default int getNowflag() {
+            return -1;
+        }
+    }
+
+    public static class GunWriteByteUtil implements GunExecByteUtil {
 
         public GunWriteByteUtil(byte[] input) {
             this.input = input;
         }
 
+        @Override
         public int getNowflag() {
             return nowflag;
         }
 
         public byte[] getInput() {
             return input;
+        }
+
+        @Override
+        public int getLenSum() {
+            return input.length;
         }
 
         private int nowflag = 0;
@@ -67,89 +107,6 @@ public final class GunBytesUtil {
         }
     }
 
-
-    public static class GunReadByteUtil {
-        public GunReadByteUtil(byte[] input) {
-            this.output = input;
-        }
-
-        private int nowflag = 0;
-        private byte[] output;
-
-        public byte readByte() {
-            return output[nowflag++];
-        }
-
-        public int getNowflag() {
-            return nowflag;
-        }
-
-        public byte[] getOutput() {
-            return output;
-        }
-
-        public int readInt() {
-            byte[] read = readByte(2);
-            int res;
-            res = read[0] < 0 ? (0xff & read[0]) : read[0];
-            res = res << 8;
-            res = res ^ (read[1] < 0 ? (0xff & read[1]) : read[1]);
-            return res;
-        }
-
-        public short readUByte() {
-            return (short) (0xff & readByte());
-        }
-
-        public boolean readBool() {
-            return readByte() != 0;
-        }
-
-        public int readInt32() {
-            int left = readInt();
-            int right = readInt();
-            return (left << 16) ^ right;
-        }
-
-        public long readLong() {
-            long left = readInt32();
-            long right = readInt32();
-            return (left << 32) | (right);
-        }
-
-        public byte[] readByte(int len) {
-            byte[] op = new byte[len];
-            System.arraycopy(output, nowflag, op, 0, len);
-            nowflag += len;
-            return op;
-        }
-    }
-
-    private static byte[] incrementCopy(byte[] oldbytes, int increment) {
-        byte[] newbbytes = new byte[oldbytes.length + increment];
-        System.arraycopy(oldbytes, 0, newbbytes, 0, oldbytes.length);
-        return newbbytes;
-    }
-
-
-    public static boolean compareBytesFromStart(final byte[] src,  final byte... b) {
-        for (int i = 0; i < b.length; i++) {
-            if (src[i] != b[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean compareBytesFromEnd(final byte[] src,  final byte... b) {
-        for (int i = b.length - 1; i > 0; i--) {
-            if (src[src.length - i] != b[b.length - i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private static ByteBuffer heapbuff;
 
     public static void init(int size) {
@@ -179,5 +136,68 @@ public final class GunBytesUtil {
 
     public static byte[] readFromChannel(SocketChannel channel) throws IOException {
         return readFromChannel(channel, 512);
+    }
+
+    public static class GunReadByteUtil implements GunExecByteUtil {
+        public GunReadByteUtil(byte[] input) {
+            this.output = input;
+        }
+
+        private int nowflag = 0;
+        private byte[] output;
+
+        public byte readByte() {
+            return output[nowflag++];
+        }
+
+        @Override
+        public int getNowflag() {
+            return nowflag;
+        }
+
+        public byte[] getOutput() {
+            return output;
+        }
+
+        public int readInt() {
+            byte[] read = readByte(2);
+            int res;
+            res = read[0] < 0 ? (0xff & read[0]) : read[0];
+            res = res << 8;
+            res = res ^ (read[1] < 0 ? (0xff & read[1]) : read[1]);
+            return res;
+        }
+
+        @Override
+        public int getLenSum() {
+            return output.length;
+        }
+
+        public short readUByte() {
+            return (short) (0xff & readByte());
+        }
+
+        public boolean readBool() {
+            return readByte() != 0;
+        }
+
+        public int readInt32() {
+            int left = readInt();
+            int right = readInt();
+            return (left << 16) ^ right;
+        }
+
+        public long readLong() {
+            long left = readInt32();
+            long right = readInt32();
+            return (left << 32) | (right);
+        }
+
+        public byte[] readByte(int len) {
+            byte[] op = new byte[len];
+            System.arraycopy(output, nowflag, op, 0, len);
+            nowflag += len;
+            return op;
+        }
     }
 }
