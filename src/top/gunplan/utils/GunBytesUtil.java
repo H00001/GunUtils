@@ -34,7 +34,39 @@ public final class GunBytesUtil {
     }
 
 
+    private static ByteBuffer heapbuff;
+
+    private static byte[] readFromChannel(SocketChannel channel, int increment) throws IOException {
+        byte[] save = new byte[increment];
+        int nowpoint = 0;
+        int maxsize = increment;
+        int readlen;
+        while ((readlen = channel.read(heapbuff)) > 0) {
+            byte[] buffer = heapbuff.array();
+            if (maxsize - nowpoint < buffer.length) {
+                save = GunBytesUtil.incrementCopy(save, increment);
+                maxsize += increment;
+            }
+            System.arraycopy(buffer, 0, save, nowpoint, buffer.length);
+            nowpoint += readlen;
+            heapbuff.clear();
+        }
+        byte[] realsave = new byte[nowpoint];
+        System.arraycopy(save, 0, realsave, 0, nowpoint);
+        return nowpoint != 0 ? realsave : null;
+
+    }
+
+    public static void init(int size) {
+        heapbuff = ByteBuffer.allocate(size);
+    }
+
     public interface GunExecByteUtil {
+
+        void pAdd2();
+
+        void pSub2();
+
         default int getLenSum() {
             return -1;
         }
@@ -44,9 +76,10 @@ public final class GunBytesUtil {
         }
     }
 
-    public static class GunWriteByteUtil implements GunExecByteUtil {
+    public static class GunWriteByteStream implements GunExecByteUtil {
 
-        public GunWriteByteUtil(byte[] input) {
+
+        public GunWriteByteStream(byte[] input) {
             this.input = input;
         }
 
@@ -57,6 +90,16 @@ public final class GunBytesUtil {
 
         public byte[] getInput() {
             return input;
+        }
+
+        @Override
+        public void pAdd2() {
+            nowflag += 2;
+        }
+
+        @Override
+        public void pSub2() {
+            nowflag -= 2;
         }
 
         @Override
@@ -107,39 +150,12 @@ public final class GunBytesUtil {
         }
     }
 
-    private static ByteBuffer heapbuff;
-
-    public static void init(int size) {
-        heapbuff = ByteBuffer.allocate(size);
-    }
-
-    public static byte[] readFromChannel(SocketChannel channel, int increment) throws IOException {
-        byte[] save = new byte[increment];
-        int nowpoint = 0;
-        int maxsize = increment;
-        int readlen;
-        while ((readlen = channel.read(heapbuff)) > 0) {
-            byte[] buffer = heapbuff.array();
-            if (maxsize - nowpoint < buffer.length) {
-                save = GunBytesUtil.incrementCopy(save, increment);
-                maxsize += increment;
-            }
-            System.arraycopy(buffer, 0, save, nowpoint, buffer.length);
-            nowpoint += readlen;
-            heapbuff.clear();
-        }
-        byte[] realsave = new byte[nowpoint];
-        System.arraycopy(save, 0, realsave, 0, nowpoint);
-        return nowpoint != 0 ? realsave : null;
-
-    }
-
     public static byte[] readFromChannel(SocketChannel channel) throws IOException {
         return readFromChannel(channel, 512);
     }
 
-    public static class GunReadByteUtil implements GunExecByteUtil {
-        public GunReadByteUtil(byte[] input) {
+    public static class GunReadByteStream implements GunExecByteUtil {
+        public GunReadByteStream(byte[] input) {
             this.output = input;
         }
 
@@ -166,6 +182,16 @@ public final class GunBytesUtil {
             res = res << 8;
             res = res ^ (read[1] < 0 ? (0xff & read[1]) : read[1]);
             return res;
+        }
+
+        @Override
+        public void pAdd2() {
+            this.nowflag += 2;
+        }
+
+        @Override
+        public void pSub2() {
+            this.nowflag -= 2;
         }
 
         @Override

@@ -17,14 +17,14 @@ public abstract class AbstractGunBaseLogUtil {
      */
 
 
-    private static final int BASELEVEL;
+    private static final int BASE_LEVEL;
     private static volatile int level = 0;
 
 
     static {
         stdoutput = System.out;
         erroutput = System.err;
-        BASELEVEL = 1;
+        BASE_LEVEL = 1;
     }
 
     public static synchronized void setErroutput(OutputStream erroutput) {
@@ -63,32 +63,32 @@ public abstract class AbstractGunBaseLogUtil {
 
 
     public static void info(String s, String... val) {
-        if (AbstractGunBaseLogUtil.level <= (BASELEVEL)) {
+        if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL)) {
             realPrint(stdoutput, "[INFO] ", s, val);
         }
     }
 
     public static void debug(String s, String... val) {
 
-        if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 1)) {
+        if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 1)) {
             realPrint(stdoutput, "[DEBUG] ", s, val);
         }
     }
 
     public static void error(String s, String... val) {
-        if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 2)) {
+        if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 2)) {
             realPrint(erroutput, "[ERROR] ", s, val);
         }
     }
 
     public static void error(Exception s) {
-        if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 2)) {
+        if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 2)) {
             realPrint(erroutput, "[ERROR] ", s.getLocalizedMessage());
         }
     }
 
     public static void urgency(String s, String... val) {
-        if (AbstractGunBaseLogUtil.level <= (BASELEVEL << 3)) {
+        if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 3)) {
             realPrint(erroutput, "[URGENCY] ", s, val);
         }
     }

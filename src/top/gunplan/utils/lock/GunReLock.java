@@ -6,8 +6,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 
 public class GunReLock implements Lock {
-    private AtomicReference<Thread> owner = new AtomicReference<>(null);
-    private BlockingQueue<Thread> waitqueue = new LinkedBlockingQueue<>();
+    private volatile AtomicReference<Thread> owner = new AtomicReference<>(null);
+    private volatile BlockingQueue<Thread> waitqueue = new LinkedBlockingQueue<>();
 
     @Override
     public void lock() {
@@ -16,8 +16,10 @@ public class GunReLock implements Lock {
         } else {
             //#1
             waitqueue.offer(Thread.currentThread());
-            if (tryLock()) {//再一次尝试获取锁，防止unlock快速在#1过程中快速释放
-                waitqueue.remove(Thread.currentThread());//获取到锁，删除在队列中的线程
+            if (tryLock()) {
+                //再一次尝试获取锁，防止unlock快速在#1过程中快速释放
+                waitqueue.remove(Thread.currentThread());
+                //获取到锁，删除在队列中的线程
                 return;
             } else {
                 //如果unlock在这里快速释放，queue 已经存在当前线程，

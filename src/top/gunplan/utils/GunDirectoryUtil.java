@@ -66,7 +66,7 @@ public final class GunDirectoryUtil {
             this.clcasfile = clcasfile;
         }
 
-        public GunMappingFileReference(String base, String packname, File clcasfile) {
+        GunMappingFileReference(String base, String packname, File clcasfile) {
 
             this.base = base;
             this.packname = packname;
