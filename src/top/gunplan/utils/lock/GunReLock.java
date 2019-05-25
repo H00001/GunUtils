@@ -1,4 +1,6 @@
 package top.gunplan.utils.lock;
+
+import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
@@ -7,7 +9,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class GunReLock implements Lock {
     private volatile AtomicReference<Thread> owner = new AtomicReference<>(null);
-    private volatile BlockingQueue<Thread> waitqueue = new LinkedBlockingQueue<>();
+    private volatile ConcurrentLinkedQueue<Thread> waitqueue = new ConcurrentLinkedQueue<>();
 
     @Override
     public void lock() {
@@ -66,6 +68,48 @@ public class GunReLock implements Lock {
 
     @Override
     public Condition newCondition() {
-        return null;
+        return new GunCondition();
+    }
+
+    final class GunCondition implements Condition {
+
+        @Override
+        public void await() throws InterruptedException {
+            unlock();
+            waitqueue.offer(Thread.currentThread());
+            LockSupport.park();
+            lock();
+        }
+
+        @Override
+        public void awaitUninterruptibly() {
+
+        }
+
+        @Override
+        public long awaitNanos(long nanosTimeout) throws InterruptedException {
+            return 0;
+        }
+
+        @Override
+        public boolean await(long time, TimeUnit unit) throws InterruptedException {
+            return false;
+        }
+
+        @Override
+        public boolean awaitUntil(Date deadline) throws InterruptedException {
+            return false;
+        }
+
+        @Override
+        public void signal() {
+            LockSupport.unpark(waitqueue.poll());
+        }
+
+        @Override
+        public void signalAll() {
+            waitqueue.parallelStream().forEach(LockSupport::unpark);
+            waitqueue.clear();
+        }
     }
 }

@@ -166,6 +166,18 @@ public final class GunBytesUtil {
             return output[nowflag++];
         }
 
+        public String readLine() {
+            for (int i = nowflag; i < output.length; i++) {
+                if (output[i] == '\n') {
+                    String ss = new String(output, nowflag, i - nowflag);
+                    nowflag = i + 1;
+                    return ss;
+                }
+            }
+
+            return null;
+        }
+
         @Override
         public int getNowflag() {
             return nowflag;
