@@ -50,7 +50,7 @@ public abstract class AbstractGunBaseLogUtil {
             op = op + content;
         }
         try {
-            os.write((op + "\n").getBytes());
+            os.write(("[" + System.currentTimeMillis() + "] " + op + "\n").getBytes());
             stdoutput.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,7 +83,9 @@ public abstract class AbstractGunBaseLogUtil {
 
     public static void error(Exception s) {
         if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 2)) {
-            realPrint(erroutput, "[ERROR] ", s.getLocalizedMessage());
+            //realPrint(erroutput, "[ERROR] ", s.getLocalizedMessage());
+            // realPrint(erroutput, "[ERROR] ", s.getCause().toString());
+            realPrint(erroutput, "[ERROR] ", s.getMessage());
         }
     }
 
