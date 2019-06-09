@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
+import java.util.logging.SimpleFormatter;
 
 
 /**
@@ -20,6 +23,11 @@ public abstract class AbstractGunBaseLogUtil {
     private static final int BASE_LEVEL;
     private static volatile int level = 0;
 
+    private static volatile SimpleDateFormat ffm = null;
+
+    public static void setFormat(String format) {
+        ffm = new SimpleDateFormat(format);
+    }
 
     static {
         stdoutput = System.out;
@@ -50,7 +58,7 @@ public abstract class AbstractGunBaseLogUtil {
             op = op + content;
         }
         try {
-            os.write(("[" + System.currentTimeMillis() + "] " + op + "\n").getBytes());
+            os.write(("[" + (ffm == null ? System.currentTimeMillis() : ffm.format(new Date())) + "] " + op + "\n").getBytes());
             stdoutput.flush();
         } catch (IOException e) {
             e.printStackTrace();

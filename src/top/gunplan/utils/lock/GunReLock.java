@@ -7,6 +7,13 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 
+/**
+ * GunReLock
+ *
+ * @author frank albert
+ * @version 0.0.0.1
+ * @date 2019-06-08 21:04
+ */
 public class GunReLock implements Lock {
     private volatile AtomicReference<Thread> owner = new AtomicReference<>(null);
     private volatile ConcurrentLinkedQueue<Thread> waitqueue = new ConcurrentLinkedQueue<>();
@@ -41,7 +48,8 @@ public class GunReLock implements Lock {
 
     @Override
     public boolean tryLock() {
-        return owner.compareAndSet(null, Thread.currentThread());
+        //re enter
+        return Thread.currentThread() == owner.get() || owner.compareAndSet(null, Thread.currentThread());
     }
 
     @Override
