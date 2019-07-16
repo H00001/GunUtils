@@ -2,12 +2,13 @@ package top.gunplan.utils;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.logging.SimpleFormatter;
+
 
 
 /**
@@ -91,8 +92,6 @@ public abstract class AbstractGunBaseLogUtil {
 
     public static void error(Exception s) {
         if (AbstractGunBaseLogUtil.level <= (BASE_LEVEL << 2)) {
-            //realPrint(erroutput, "[ERROR] ", s.getLocalizedMessage());
-            // realPrint(erroutput, "[ERROR] ", s.getCause().toString());
             realPrint(erroutput, "[ERROR] ", s.getMessage());
         }
     }
@@ -103,7 +102,7 @@ public abstract class AbstractGunBaseLogUtil {
         }
     }
 
-    public static void outputFile(String file) throws Exception {
+    public static void outputFile(String file) throws IOException, URISyntaxException {
 
         byte[] property = Files.readAllBytes(Paths.get(Objects.requireNonNull(AbstractGunBaseLogUtil.class
                 .getClassLoader().getResource(file)).toURI()));
