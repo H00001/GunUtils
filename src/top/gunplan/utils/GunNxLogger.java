@@ -24,7 +24,7 @@ public final class GunNxLogger implements GunLogger {
      */
     private static final int BASE_LEVEL = 1;
     private volatile int level = 0;
-    private AtomicReference<Class<?>> clazz;
+    private AtomicReference<Class<?>> clazz = new AtomicReference<>(null);
 
     private volatile SimpleDateFormat ffm = null;
     private volatile OutputStream stdoutput;
@@ -58,7 +58,7 @@ public final class GunNxLogger implements GunLogger {
 
     private void realPrint(final OutputStream os, final String tag, String content, String... val) {
         String op = tag;
-        String className = "[" + (clazz == null ? "null" : clazz.get().getSimpleName()) + "]";
+        String className = "[" + (clazz.get() == null ? "null" : clazz.get().getSimpleName()) + "] ";
         if (val != null && val.length != 0) {
             StringBuilder contentBuilder = new StringBuilder();
             for (String aVal : val) {
