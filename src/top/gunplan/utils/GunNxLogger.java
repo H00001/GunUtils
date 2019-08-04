@@ -47,8 +47,8 @@ public final class GunNxLogger implements GunLogger {
     }
 
     @Override
-    public synchronized void setErrOutput(OutputStream erroutput) {
-        this.erroutput = erroutput;
+    public synchronized void setErrOutput(OutputStream errOutput) {
+        this.erroutput = errOutput;
     }
 
     @Override
@@ -77,7 +77,7 @@ public final class GunNxLogger implements GunLogger {
     }
 
     @Override
-    public synchronized void setStdoutput(OutputStream os) {
+    public synchronized void setStdOutput(OutputStream os) {
         this.stdoutput = os;
     }
 
@@ -85,7 +85,7 @@ public final class GunNxLogger implements GunLogger {
     @Override
     public void info(String s, String... val) {
         if (this.level <= (BASE_LEVEL)) {
-            realPrint(stdoutput, "[INFO] ", s, val);
+            realPrint(stdoutput, "[   INFO] ", s, val);
         }
     }
 
@@ -93,21 +93,21 @@ public final class GunNxLogger implements GunLogger {
     public void debug(String s, String... val) {
 
         if (this.level <= (BASE_LEVEL << 1)) {
-            realPrint(stdoutput, "[DEBUG] ", s, val);
+            realPrint(stdoutput, "[  DEBUG] ", s, val);
         }
     }
 
     @Override
     public void error(String s, String... val) {
         if (this.level <= (BASE_LEVEL << 2)) {
-            realPrint(erroutput, "[ERROR] ", s, val);
+            realPrint(erroutput, "[  ERROR] ", s, val);
         }
     }
 
     @Override
-    public void error(Exception s) {
+    public void error(Throwable s) {
         if (this.level <= (BASE_LEVEL << 2)) {
-            realPrint(erroutput, "[ERROR] ", s.getMessage());
+            realPrint(erroutput, "[  ERROR] ", s.getMessage());
         }
     }
 
@@ -120,8 +120,8 @@ public final class GunNxLogger implements GunLogger {
 
     @Override
     public void outputFile(String file) throws IOException, URISyntaxException {
-        byte[] property = Files.readAllBytes(Paths.get(Objects.requireNonNull(this.getClass().getResource(file)).toURI()));
-        realPrint(stdoutput, "", new String(property));
+        String property = Files.readString(Paths.get(Objects.requireNonNull(this.getClass().getClassLoader().getResource(file)).toURI()));
+        realPrint(stdoutput, "[ STDOUT] ", property);
     }
 
 

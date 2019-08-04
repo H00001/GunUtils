@@ -35,7 +35,7 @@ public interface GunLogger {
     void init();
 
 
-    void setStdoutput(OutputStream os);
+    void setStdOutput(OutputStream os);
 
 
     void info(String s, String... val);
@@ -45,7 +45,7 @@ public interface GunLogger {
 
     void error(String s, String... val);
 
-    void error(Exception s);
+    void error(Throwable s);
 
 
     void urgency(String s, String... val);
