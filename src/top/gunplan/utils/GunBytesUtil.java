@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) frankHan personal 2017-2018
+ */
+
 package top.gunplan.utils;
 
 
@@ -37,7 +41,6 @@ public final class GunBytesUtil {
     private static ByteBuffer heapbuff;
 
     private static byte[] readFromChannel(SocketChannel channel, int increment) throws IOException {
-
         byte[] save = new byte[increment];
         int nowpoint = 0;
         int maxsize = increment;
@@ -54,8 +57,10 @@ public final class GunBytesUtil {
         }
         byte[] realsave = new byte[nowpoint];
         System.arraycopy(save, 0, realsave, 0, nowpoint);
-        return nowpoint != 0 ? realsave : null;
-
+        if (nowpoint == 0) {
+            throw new IOException("socket has been close");
+        }
+        return realsave;
     }
 
     private static byte[] readFromChannel0(SocketChannel channel, int increment) throws IOException {
