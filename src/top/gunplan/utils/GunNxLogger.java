@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) frankHan personal 2017-2018
+ */
+
 package top.gunplan.utils;
 
 import java.io.IOException;
@@ -6,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 2.0.0.2
  */
 
+@SuppressWarnings("AlibabaUndefineMagicConstant")
 public final class GunNxLogger implements GunLogger {
     /**
      * this is s static block
@@ -108,11 +114,13 @@ public final class GunNxLogger implements GunLogger {
     public void error(Throwable s) {
         if (this.level <= (BASE_LEVEL << 2)) {
             realPrint(erroutput, "[  ERROR] ", s.getMessage());
+            realPrint(erroutput, "[  ERROR] ", Arrays.toString(s.getStackTrace()));
         }
     }
 
     @Override
     public void urgency(String s, String... val) {
+        //noinspection AlibabaUndefineMagicConstant
         if (this.level <= (BASE_LEVEL << 3)) {
             realPrint(erroutput, "[URGENCY] ", s, val);
         }
