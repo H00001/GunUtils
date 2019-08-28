@@ -33,8 +33,11 @@ public final class GunNxLogger implements GunLogger {
     private AtomicReference<Class<?>> clazz = new AtomicReference<>(null);
 
     private volatile SimpleDateFormat ffm = null;
+
     private volatile OutputStream stdoutput;
+
     private volatile OutputStream erroutput;
+
 
     {
         stdoutput = System.out;

@@ -38,29 +38,30 @@ public final class GunBytesUtil {
     }
 
 
-    private static ByteBuffer heapbuff;
+    private static ByteBuffer byteBuffer;
 
     private static byte[] readFromChannel(SocketChannel channel, int increment) throws IOException {
         byte[] save = new byte[increment];
         int nowpoint = 0;
         int maxsize = increment;
         int readlen;
-        while ((readlen = channel.read(heapbuff)) > 0) {
-            byte[] buffer = heapbuff.array();
+        while ((readlen = channel.read(byteBuffer)) > 0) {
+            byte[] buffer = byteBuffer.array();
             if (maxsize - nowpoint < buffer.length) {
                 save = GunBytesUtil.incrementCopy(save, increment);
                 maxsize += increment;
             }
             System.arraycopy(buffer, 0, save, nowpoint, buffer.length);
             nowpoint += readlen;
-            heapbuff.clear();
+            byteBuffer.clear();
         }
-        byte[] realsave = new byte[nowpoint];
-        System.arraycopy(save, 0, realsave, 0, nowpoint);
         if (nowpoint == 0) {
             throw new IOException("socket has been close");
         }
-        return realsave;
+        byte[] realSave = new byte[nowpoint];
+        System.arraycopy(save, 0, realSave, 0, nowpoint);
+
+        return realSave;
     }
 
     private static byte[] readFromChannel0(SocketChannel channel, int increment) throws IOException {
@@ -69,15 +70,15 @@ public final class GunBytesUtil {
         int nowpoint = 0;
         int maxsize = increment;
         int readlen;
-        while ((readlen = channel.read(heapbuff)) > 0) {
-            byte[] buffer = heapbuff.array();
+        while ((readlen = channel.read(byteBuffer)) > 0) {
+            byte[] buffer = byteBuffer.array();
             if (maxsize - nowpoint < buffer.length) {
                 save = GunBytesUtil.incrementCopy(save, increment);
                 maxsize += increment;
             }
             System.arraycopy(buffer, 0, save, nowpoint, buffer.length);
             nowpoint += readlen;
-            heapbuff.clear();
+            byteBuffer.clear();
         }
         byte[] realsave = new byte[nowpoint];
         System.arraycopy(save, 0, realsave, 0, nowpoint);
@@ -87,7 +88,7 @@ public final class GunBytesUtil {
 
 
     public static void init(int size) {
-        heapbuff = ByteBuffer.allocate(size);
+        byteBuffer = ByteBuffer.allocate(size);
     }
 
     public interface GunExecByteUtil {
