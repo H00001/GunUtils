@@ -7,6 +7,8 @@ package top.gunplan.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +24,7 @@ import java.util.List;
 public final class GunDirectoryUtil {
     public static List<GunMappingFileReference> scanAllFilesFromDirectory(final String folder, String type) throws IOException {
         List<GunMappingFileReference> files = new LinkedList<>();
-        nextFindFile(files, folder, type, "");
+        nextFindFile(files, URLDecoder.decode(folder, StandardCharsets.UTF_8), type, "");
         return files;
     }
 
