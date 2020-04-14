@@ -40,28 +40,10 @@ public final class GunBytesUtil {
 
     private static ByteBuffer byteBuffer;
 
-    private static byte[] readFromChannel(SocketChannel channel, int increment) throws IOException {
-        byte[] save = new byte[increment];
-        int nowpoint = 0;
-        int maxsize = increment;
-        int readlen;
-        while ((readlen = channel.read(byteBuffer)) > 0) {
-            byte[] buffer = byteBuffer.array();
-            if (maxsize - nowpoint < buffer.length) {
-                save = GunBytesUtil.incrementCopy(save, increment);
-                maxsize += increment;
-            }
-            System.arraycopy(buffer, 0, save, nowpoint, buffer.length);
-            nowpoint += readlen;
-            byteBuffer.clear();
-        }
-        if (nowpoint == 0) {
-            throw new IOException("socket has been close");
-        }
-        byte[] realSave = new byte[nowpoint];
-        System.arraycopy(save, 0, realSave, 0, nowpoint);
-
-        return realSave;
+    private static ByteBuffer readFromChannel(SocketChannel channel, int increment) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(increment);
+        var len = channel.read(buffer);
+        return buffer;
     }
 
     private static byte[] readFromChannel0(SocketChannel channel, int increment) throws IOException {
@@ -180,7 +162,7 @@ public final class GunBytesUtil {
         }
     }
 
-    public static byte[] readFromChannel(SocketChannel channel) throws IOException {
+    public static ByteBuffer readFromChannel(SocketChannel channel) throws IOException {
         return readFromChannel(channel, 512);
     }
 
